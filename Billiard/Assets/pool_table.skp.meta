@@ -1,0 +1,210 @@
+fileFormatVersion: 2
+guid: 491e7bce7e52d3848b61a4c478e45132
+timeCreated: 1458944054
+licenseType: Free
+SketchUpImporter:
+  generateBackFace: 0
+  mergeCoplanarFaces: 0
+  selectedNodes: 000000000100000002000000030000000400000005000000060000000700000008000000090000000a0000000b0000000c0000000d0000000e0000000f000000100000001100000012000000130000001400000015000000160000001700000018000000190000001a0000001b0000001c0000001d0000001e0000001f000000200000002100000022000000230000002400000025000000260000002700000028000000290000002a0000002b0000002c0000002d0000002e0000002f00000030000000
+  assetHash:
+    serializedVersion: 2
+    Hash: 00aa51983aee7801ae2858bef6cf0756
+  longitude: -105.283
+  latitude: 40.017
+  northCorrection: -0
+  fileUnit: 0
+  sketchUpImportData:
+    defaultCamera:
+      position: {x: -1.20984, y: 1.9329854, z: -1.3713423}
+      lookAt: {x: 0.71718955, y: 0.4437806, z: 0.8277578}
+      up: {x: 0.2991033, y: 0.89108324, z: 0.34133264}
+      fov: 35
+      aspectRatio: 0
+      orthoSize: 1
+      isPerspective: 1
+    scenes: []
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: Component#2
+    100002: Component#3
+    100004: Group 1
+    100006: Group 10
+    100008: Group 12
+    100010: leg
+    100012: leg 1
+    100014: leg 2
+    100016: pool ball
+    100018: pool ball 1
+    100020: pool ball#2
+    100022: pool ball#3
+    100024: pool ball#4
+    100026: pool ball#5
+    100028: pool ball#6
+    100030: pool ball#7
+    100032: pool table
+    100034: //RootNode
+    100036: stick
+    100038: striped ball
+    100040: striped ball#1
+    100042: striped ball#2
+    100044: striped ball#3
+    100046: striped ball#4
+    100048: striped ball#5
+    100050: striped ball#6
+    400000: Component#2
+    400002: Component#3
+    400004: Group 1
+    400006: Group 10
+    400008: Group 12
+    400010: leg
+    400012: leg 1
+    400014: leg 2
+    400016: pool ball
+    400018: pool ball 1
+    400020: pool ball#2
+    400022: pool ball#3
+    400024: pool ball#4
+    400026: pool ball#5
+    400028: pool ball#6
+    400030: pool ball#7
+    400032: pool table
+    400034: //RootNode
+    400036: stick
+    400038: striped ball
+    400040: striped ball#1
+    400042: striped ball#2
+    400044: striped ball#3
+    400046: striped ball#4
+    400048: striped ball#5
+    400050: striped ball#6
+    2300000: Component#2
+    2300002: Component#3
+    2300004: Group 10
+    2300006: leg
+    2300008: leg 1
+    2300010: leg 2
+    2300012: pool ball
+    2300014: pool ball 1
+    2300016: pool ball#2
+    2300018: pool ball#3
+    2300020: pool ball#4
+    2300022: pool ball#5
+    2300024: pool ball#6
+    2300026: pool ball#7
+    2300028: pool table
+    2300030: stick
+    2300032: striped ball
+    2300034: striped ball#1
+    2300036: striped ball#2
+    2300038: striped ball#3
+    2300040: striped ball#4
+    2300042: striped ball#5
+    2300044: striped ball#6
+    3300000: Component#2
+    3300002: Component#3
+    3300004: Group 10
+    3300006: leg
+    3300008: leg 1
+    3300010: leg 2
+    3300012: pool ball
+    3300014: pool ball 1
+    3300016: pool ball#2
+    3300018: pool ball#3
+    3300020: pool ball#4
+    3300022: pool ball#5
+    3300024: pool ball#6
+    3300026: pool ball#7
+    3300028: pool table
+    3300030: stick
+    3300032: striped ball
+    3300034: striped ball#1
+    3300036: striped ball#2
+    3300038: striped ball#3
+    3300040: striped ball#4
+    3300042: striped ball#5
+    3300044: striped ball#6
+    4300000: Mesh pool ball#2
+    4300002: Mesh pool ball#3
+    4300004: Mesh pool ball#4
+    4300006: Mesh pool table
+    4300008: Mesh Group 10
+    4300010: Mesh leg
+    4300012: Mesh pool ball
+    4300014: Mesh pool ball#5
+    4300016: Mesh pool ball#6
+    4300018: Mesh pool ball#7
+    4300020: Mesh pool ball
+    4300022: Mesh striped ball#6
+    4300024: Mesh striped ball#1
+    4300026: Mesh striped ball#5
+    4300028: Mesh striped ball#4
+    4300030: Mesh striped ball#3
+    4300032: Mesh striped ball
+    4300034: Mesh striped ball#2
+    4300036: Mesh Component#2
+    4300038: Mesh stick
+    4300040: Mesh Component#3
+  materials:
+    importMaterials: 1
+    materialName: 2
+    materialSearch: 0
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleRotations: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 0.0254
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 0
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
