@@ -12,7 +12,6 @@ public class BilliardBall : MonoBehaviour
     private float radius;
     [SerializeField]
     private Vector3 speed;
-    [SerializeField]
     private float friction;
     [SerializeField]
     private float speedDownLimit;
@@ -89,6 +88,11 @@ public class BilliardBall : MonoBehaviour
         }
     }
 
+    public BilliardBall()
+    {
+        friction = 0.2f;
+    }
+
     //decelerate because of the friction
     public void Accelarate()
     {
@@ -124,9 +128,9 @@ public class BilliardBall : MonoBehaviour
     {
         Vector3 appliedRotation;
 
-        appliedRotation.x = speed.z / (2 * Mathf.PI * radius) * 360 * 360 * Time.deltaTime;
+        appliedRotation.x = speed.z / (2 * Mathf.PI * radius) * 360 * Time.deltaTime;
         appliedRotation.y = 0;
-        appliedRotation.z = -speed.x / (2 * Mathf.PI * radius) * 360 * 360 * Time.deltaTime;
+        appliedRotation.z = -speed.x / (2 * Mathf.PI * radius) * 360 * Time.deltaTime;
 
         gameObject.transform.Rotate(appliedRotation.x, appliedRotation.y, appliedRotation.z, Space.World);
     }
@@ -247,7 +251,7 @@ public class BilliardBall : MonoBehaviour
         Accelarate();
         Collide();
         Roll();
-        gameObject.transform.position += speed;
+        gameObject.transform.position += speed * Time.deltaTime;
     }
 
     // Use this for initialization
