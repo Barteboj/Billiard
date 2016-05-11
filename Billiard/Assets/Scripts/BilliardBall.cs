@@ -13,7 +13,6 @@ public class BilliardBall : MonoBehaviour
     [SerializeField]
     private Vector3 speed;
     private float friction;
-    [SerializeField]
     private float speedDownLimit;
 
     public int Number
@@ -91,6 +90,7 @@ public class BilliardBall : MonoBehaviour
     public BilliardBall()
     {
         friction = 0.2f;
+        speedDownLimit = 0.0009f;
     }
 
     //decelerate because of the friction
@@ -128,31 +128,52 @@ public class BilliardBall : MonoBehaviour
     {
         Vector3 appliedRotation;
 
-        appliedRotation.x = speed.z / (2 * Mathf.PI * radius) * 360 * Time.deltaTime;
+        Vector3 appliedShift = speed * Time.deltaTime;
+
+        gameObject.transform.position += appliedShift;
+
+        appliedRotation.x = appliedShift.z / (2 * Mathf.PI * radius) * 360;
         appliedRotation.y = 0;
-        appliedRotation.z = -speed.x / (2 * Mathf.PI * radius) * 360 * Time.deltaTime;
+        appliedRotation.z = -appliedShift.x / (2 * Mathf.PI * radius) * 360;
 
         gameObject.transform.Rotate(appliedRotation.x, appliedRotation.y, appliedRotation.z, Space.World);
+    }
+
+    public void Roll(Vector3 shift)
+    {
+        Vector3 rotation;
+
+        gameObject.transform.position += shift;
+
+        rotation.x = shift.z / (2 * Mathf.PI * radius) * 360;
+        rotation.y = 0;
+        rotation.z = -shift.x / (2 * Mathf.PI * radius) * 360;
+
+        gameObject.transform.Rotate(rotation.x, rotation.y, rotation.z, Space.World);
     }
 
     //collisions with borders of table
     public void Collide()
     {
-        if (gameObject.transform.position.x >= 0.5175)
+        if (gameObject.transform.position.x >= 0.5175f)
         {
+            Roll(new Vector3(0.5175f - gameObject.transform.position.x, 0, 0));
             speed = new Vector3(-speed.x, speed.y, speed.z);
         }
-        if (gameObject.transform.position.x <= -0.5175)
+        if (gameObject.transform.position.x <= -0.5175f)
         {
+            Roll(new Vector3(-gameObject.transform.position.x - 0.5175f, 0, 0));
             speed = new Vector3(-speed.x, speed.y, speed.z);
         }
 
-        if (gameObject.transform.position.z >= 0.795)
+        if (gameObject.transform.position.z >= 0.795f)
         {
+            Roll(new Vector3(0, 0, 0.795f - gameObject.transform.position.z));
             speed = new Vector3(speed.x, speed.y, -speed.z);
         }
-        if (gameObject.transform.position.z <= -1.295)
+        if (gameObject.transform.position.z <= -1.295f)
         {
+            Roll(new Vector3(0, 0, -gameObject.transform.position.z - 1.295f));
             speed = new Vector3(speed.x, speed.y, -speed.z);
         }
     }
@@ -194,6 +215,8 @@ public class BilliardBall : MonoBehaviour
         float distanceBetweenObjects = Mathf.Sqrt(Mathf.Pow(gameObject.transform.position.x - collidingObject.transform.position.x, 2) + Mathf.Pow(gameObject.transform.position.z - collidingObject.transform.position.z, 2));
         float radiusesSum = gameObject.GetComponent<BilliardBall>().radius + collidingObject.GetComponent<BilliardBall>().radius;
 
+        BilliardBall collidingObjectComponent = collidingObject.GetComponent<BilliardBall>();
+
         //when balls overlapping each other than push them aside
         if (distanceBetweenObjects < radiusesSum)
         {
@@ -212,24 +235,24 @@ public class BilliardBall : MonoBehaviour
                 Vector3 overlapVector = vectorBetweenBalls.normalized * radius * 2 - vectorBetweenBalls;
                 if (gameObject.transform.position.x >= collidingObject.transform.position.x)
                 {
-                    gameObject.transform.position += new Vector3(Mathf.Abs(overlapVector.x / 2), 0, 0);
-                    collidingObject.transform.position -= new Vector3(Mathf.Abs(overlapVector.x / 2), 0, 0);
+                    Roll(new Vector3(Mathf.Abs(overlapVector.x / 2), 0, 0));
+                    collidingObjectComponent.Roll(new Vector3(-Mathf.Abs(overlapVector.x / 2), 0, 0));
                 }
                 else
                 {
-                    gameObject.transform.position -= new Vector3(Mathf.Abs(overlapVector.x), 0, 0);
-                    collidingObject.transform.position += new Vector3(Mathf.Abs(overlapVector.x / 2), 0, 0);
+                    Roll(new Vector3(-Mathf.Abs(overlapVector.x), 0, 0));
+                    collidingObjectComponent.Roll(new Vector3(Mathf.Abs(overlapVector.x / 2), 0, 0));
                 }
 
                 if (gameObject.transform.position.z >= collidingObject.transform.position.z)
                 {
-                    gameObject.transform.position += new Vector3(0, 0, Mathf.Abs(overlapVector.z / 2));
-                    collidingObject.transform.position -= new Vector3(0, 0, Mathf.Abs(overlapVector.z / 2));
+                    Roll(new Vector3(0, 0, Mathf.Abs(overlapVector.z / 2)));
+                    collidingObjectComponent.Roll(new Vector3(0, 0, -Mathf.Abs(overlapVector.z / 2)));
                 }
                 else
                 {
-                    gameObject.transform.position -= new Vector3(0, 0, Mathf.Abs(overlapVector.z / 2));
-                    collidingObject.transform.position += new Vector3(0, 0, Mathf.Abs(overlapVector.z / 2));
+                    Roll(new Vector3(0, 0, -Mathf.Abs(overlapVector.z / 2)));
+                    collidingObjectComponent.Roll(new Vector3(0, 0, Mathf.Abs(overlapVector.z / 2)));
                 }
             //}
         }
@@ -250,8 +273,7 @@ public class BilliardBall : MonoBehaviour
     {
         Accelarate();
         Collide();
-        Roll();
-        gameObject.transform.position += speed * Time.deltaTime;
+        Roll(speed * Time.deltaTime);
     }
 
     // Use this for initialization
