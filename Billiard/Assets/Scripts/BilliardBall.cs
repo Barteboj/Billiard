@@ -14,6 +14,8 @@ public class BilliardBall : MonoBehaviour
     private Vector3 speed;
     private float friction;
     private float speedDownLimit;
+    private GameObject[] holes;
+    private GameObject[] borders;
 
     public int Number
     {
@@ -90,7 +92,7 @@ public class BilliardBall : MonoBehaviour
     public BilliardBall()
     {
         friction = 0.2f;
-        speedDownLimit = 0.0009f;
+        speedDownLimit = 0.002f;
     }
 
     //decelerate because of the friction
@@ -155,7 +157,7 @@ public class BilliardBall : MonoBehaviour
     //collisions with borders of table
     public void Collide()
     {
-        if (gameObject.transform.position.x >= 0.5175f)
+        /*if (gameObject.transform.position.x >= 0.5175f)
         {
             Roll(new Vector3(0.5175f - gameObject.transform.position.x, 0, 0));
             speed = new Vector3(-speed.x, speed.y, speed.z);
@@ -175,6 +177,59 @@ public class BilliardBall : MonoBehaviour
         {
             Roll(new Vector3(0, 0, -gameObject.transform.position.z - 1.295f));
             speed = new Vector3(speed.x, speed.y, -speed.z);
+        }*/
+
+        foreach (GameObject border in borders)
+        {
+            if (border.transform.rotation.y == 0)
+            {
+                if ((gameObject.transform.position.z > border.transform.position.z - border.transform.localScale.z / 2 - radius && gameObject.transform.position.z < border.transform.position.z + border.transform.localScale.z / 2 + radius) && Mathf.Abs(gameObject.transform.position.x) >= Mathf.Abs(border.transform.position.x) - border.transform.localScale.x / 2 - radius)
+                {
+                    if (gameObject.transform.position.x > 0 && border.transform.position.x > 0)
+                    {
+                        Roll(new Vector3(border.transform.position.x - border.transform.localScale.x / 2 - radius - gameObject.transform.position.x, 0, 0));
+                        speed = new Vector3(-speed.x, speed.y, speed.z);
+                        return;
+                    }
+                    else if (gameObject.transform.position.x < 0 && border.transform.position.x < 0)
+                    {
+                        Roll(new Vector3(border.transform.position.x + border.transform.localScale.x / 2 + radius - gameObject.transform.position.x, 0, 0));
+                        speed = new Vector3(-speed.x, speed.y, speed.z);
+                        return;
+                    }
+                    Debug.Log(border.name);
+                }
+            }
+            else
+            {
+                if ((gameObject.transform.position.x > border.transform.position.x - border.transform.localScale.z / 2 - radius && gameObject.transform.position.x < border.transform.position.x + border.transform.localScale.z / 2 + radius) && Mathf.Abs(gameObject.transform.position.z) >= Mathf.Abs(border.transform.position.z) - border.transform.localScale.x / 2 - radius)
+                {
+                    if (gameObject.transform.position.z > 0 && border.transform.position.z > 0)
+                    {
+                        Roll(new Vector3(0, 0, border.transform.position.z - border.transform.localScale.x / 2 - radius - gameObject.transform.position.z));
+                        speed = new Vector3(speed.x, speed.y, -speed.z);
+                        return;
+                    }
+                    else if (gameObject.transform.position.z < 0 && border.transform.position.z < 0)
+                    {
+                        Roll(new Vector3(0, 0, border.transform.position.z + border.transform.localScale.x / 2 + radius - gameObject.transform.position.z));
+                        speed = new Vector3(speed.x, speed.y, -speed.z);
+                        return;
+                    }
+                    Debug.Log(border.name);
+                }
+            }
+        }
+
+        foreach (GameObject hole in holes)
+        {
+            hole.transform.position = new Vector3(hole.transform.position.x, gameObject.transform.position.y, hole.transform.position.z);
+            Vector3 offset = hole.transform.position - gameObject.transform.position;
+            if (offset.magnitude < hole.GetComponent<SphereCollider>().radius * hole.transform.localScale.x)
+            {
+                gameObject.GetComponent<MeshRenderer>().enabled = false;
+                gameObject.GetComponent<BilliardBall>().speed = new Vector3(0, 0, 0);
+            }
         }
     }
 
@@ -188,7 +243,8 @@ public class BilliardBall : MonoBehaviour
             {
                 return true;
             }
-            else {
+            else
+            {
                 return false;
             }
         }
@@ -279,7 +335,8 @@ public class BilliardBall : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-
+        holes = GameObject.FindGameObjectsWithTag("Hole");
+        borders = GameObject.FindGameObjectsWithTag("Border");
     }
 
     // Update is called once per frame
