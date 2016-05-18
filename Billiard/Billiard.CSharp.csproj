@@ -67,6 +67,7 @@
     <Compile Include="Assets\Scripts\BilliardBalls.cs" />
     <Compile Include="Assets\Scripts\BilliardStick.cs" />
     <Compile Include="Assets\Scripts\CameraFollower.cs" />
+    <Compile Include="Assets\Scripts\Players.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Shaders\Specular.shader" />

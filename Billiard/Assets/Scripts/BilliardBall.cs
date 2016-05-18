@@ -16,6 +16,7 @@ public class BilliardBall : MonoBehaviour
     private float speedDownLimit;
     private GameObject[] holes;
     private GameObject[] borders;
+    public Players players;
 
     public int Number
     {
@@ -227,8 +228,40 @@ public class BilliardBall : MonoBehaviour
             Vector3 offset = hole.transform.position - gameObject.transform.position;
             if (offset.magnitude < hole.GetComponent<SphereCollider>().radius * hole.transform.localScale.x)
             {
-                gameObject.GetComponent<MeshRenderer>().enabled = false;
-                gameObject.GetComponent<BilliardBall>().speed = new Vector3(0, 0, 0);
+                if (this.number == 0)
+                {
+                    players.SetWhiteBilliardBall(GameObject.Find("White Ball"));
+                    players.ChangePlayer();
+                }
+                else if(this.number == 8)
+                {
+                    if (players.IsAllBilliardBallsPocketed())
+                    {
+                        //GRACZ WYGRAŁ
+                    }
+                    else
+                    {
+                        //GRACZ PRZEGRAŁ
+                    }
+                }
+                else
+                {
+                    if (players.CheckBilliardBallsColor(this.number))
+                    {
+                        players.AddBilliardBall(this.number);
+                    }
+                    else
+                    {
+                        players.WrongBillardBall();
+                        players.ChangePlayer();
+                    }
+                    gameObject.GetComponent<MeshRenderer>().enabled = false;
+                }
+                gameObject.GetComponent<BilliardBall>().speed = new Vector3(0, 0, 0);   
+            }
+            else
+            {
+                players.ChangePlayer();
             }
         }
     }
