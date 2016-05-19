@@ -11,6 +11,8 @@ public class BilliardStick : MonoBehaviour {
 
     private ShotStage shotStage;
 
+    public Players players;
+
     public void PrepareShot(GameObject billiardBall)
     {
         gameObject.GetComponent<MeshRenderer>().enabled = true;
@@ -102,6 +104,10 @@ public class BilliardStick : MonoBehaviour {
                 if (numberOfMovingBalls == 0)
                 {
                     shotStage = ShotStage.PREPARINGSHOT;
+                    if (!players.WhiteBilliardBall)
+                        players.StickUsed = true;
+                    else
+                        players.WhiteBilliardBall = false;
                 }
                 break;
         }

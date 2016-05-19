@@ -198,7 +198,7 @@ public class BilliardBall : MonoBehaviour
                         speed = new Vector3(-speed.x, speed.y, speed.z);
                         return;
                     }
-                    Debug.Log(border.name);
+                    //Debug.Log(border.name);
                 }
             }
             else
@@ -217,7 +217,7 @@ public class BilliardBall : MonoBehaviour
                         speed = new Vector3(speed.x, speed.y, -speed.z);
                         return;
                     }
-                    Debug.Log(border.name);
+                    //Debug.Log(border.name);
                 }
             }
         }
@@ -228,12 +228,16 @@ public class BilliardBall : MonoBehaviour
             Vector3 offset = hole.transform.position - gameObject.transform.position;
             if (offset.magnitude < hole.GetComponent<SphereCollider>().radius * hole.transform.localScale.x)
             {
+                // Debug.Log("Coś wbite");
                 if (this.number == 0)
                 {
                     players.SetWhiteBilliardBall(GameObject.Find("White Ball"));
                     players.ChangePlayer();
+                    players.StickUsed = false;
+                    Debug.Log("Biała wpadła");
+                    players.WhiteBilliardBall = true;
                 }
-                else if(this.number == 8)
+                else if (this.number == 8)
                 {
                     if (players.IsAllBilliardBallsPocketed())
                     {
@@ -246,22 +250,33 @@ public class BilliardBall : MonoBehaviour
                 }
                 else
                 {
-                    if (players.CheckBilliardBallsColor(this.number))
+                    if (!players.IsBilliardBallsPocketed(number))
                     {
-                        players.AddBilliardBall(this.number);
+                        Debug.Log("Jestem w środku");
+                        if (players.CheckBilliardBallsColor(this.number))
+                        {
+                            players.AddBilliardBall(this.number);
+                        }
+                        else
+                        {
+                            players.WrongBillardBall();
+                            players.ChangePlayer();
+                        }
+                        gameObject.GetComponent<MeshRenderer>().enabled = false;
                     }
-                    else
-                    {
-                        players.WrongBillardBall();
-                        players.ChangePlayer();
-                    }
-                    gameObject.GetComponent<MeshRenderer>().enabled = false;
+                    
                 }
                 gameObject.GetComponent<BilliardBall>().speed = new Vector3(0, 0, 0);   
             }
             else
             {
-                players.ChangePlayer();
+                if (players.StickUsed)
+                {
+                    players.ChangePlayer();
+                    players.StickUsed = false;
+                    Debug.Log("Nic nie wpadło");
+                }
+               
             }
         }
     }

@@ -5,19 +5,48 @@ using System.Collections.Generic;
 public class Players : MonoBehaviour
 {
     private string[] playerName;
-    private List<int>[] playerBalls;
+    [SerializeField]
+    private List<int> player1Balls;
+    [SerializeField]
+    private List<int> player2Balls;
     private int[] ballsLeft;
     private int[] playerColor;
     [SerializeField]
     private int activePlayer;
+    private bool stickUsed;
+    private bool whiteBilliardBall;
 
+    public bool StickUsed
+    {
+        get
+        {
+            return stickUsed;
+        }
+        set
+        {
+            stickUsed = value;
+        }
+    }
+
+    public bool WhiteBilliardBall
+    {
+        get
+        {
+            return whiteBilliardBall;
+        }
+        set
+        {
+            whiteBilliardBall = value;
+        }
+    }
 
     private void InitializePlayers()
     {
         playerName = new string[2];
         playerName[0] = "player1";
         playerName[1] = "player2";
-        playerBalls = new List<int>[2];
+        player1Balls = new List<int>();
+        player2Balls = new List<int>();
         ballsLeft = new int[2];
         ballsLeft[0] = 7;
         ballsLeft[0] = 7;
@@ -25,12 +54,18 @@ public class Players : MonoBehaviour
         playerColor[0] = 0;
         playerColor[1] = 0;
         activePlayer = 0;
+        stickUsed = false;
+        whiteBilliardBall = false;
     }
 
 
     public void AddBilliardBall(int billiardBallNumber)
     {
-        playerBalls[activePlayer].Add(billiardBallNumber);
+        Debug.Log(billiardBallNumber);
+        if(activePlayer == 0)
+            player1Balls.Add(billiardBallNumber);
+        else
+            player2Balls.Add(billiardBallNumber);
         ballsLeft[activePlayer]--;
     }
 
@@ -45,6 +80,23 @@ public class Players : MonoBehaviour
             return true;
         else
             return false;
+    }
+
+    public bool IsBilliardBallsPocketed(int billiardBallNumber)
+    {
+        foreach (int ball in player1Balls)
+        {
+            if (ball == billiardBallNumber)
+                return true;
+        }
+
+        foreach(int ball in player2Balls)
+        {
+            if (ball == billiardBallNumber)
+                return true;
+        }
+
+        return false;
     }
 
     public bool CheckBilliardBallsColor(int number)
@@ -102,6 +154,7 @@ public class Players : MonoBehaviour
     public void ChangePlayer()
     {
         activePlayer = (activePlayer == 0) ? 1 : 0;
+        Debug.Log(activePlayer);
     }
 
     public void SetWhiteBilliardBall(GameObject billardBall)
@@ -113,7 +166,7 @@ public class Players : MonoBehaviour
 
     // Use this for initialization
     void Start () {
-        
+        InitializePlayers();
 	
 	}
 	
