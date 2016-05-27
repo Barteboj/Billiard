@@ -11,7 +11,11 @@ public class BilliardStick : MonoBehaviour {
 
     private ShotStage shotStage;
 
+    private bool isViewfinderEnabled = true;
+
     public Players players;
+
+    public GameObject viewfinder;
 
     public void PrepareShot(GameObject billiardBall)
     {
@@ -24,7 +28,13 @@ public class BilliardStick : MonoBehaviour {
 
     public void Aim(GameObject billiardBall)
     {
-        gameObject.transform.RotateAround(billiardBall.transform.position, new Vector3(0, 1, 0), -Input.GetAxis("Mouse X") * 2);
+        gameObject.transform.RotateAround(billiardBall.transform.position, Vector3.up, Input.GetAxis("Mouse X") * 120 * Time.deltaTime);
+        viewfinder.transform.position = billiardBall.transform.position;
+        viewfinder.transform.rotation = gameObject.transform.rotation;
+        if (isViewfinderEnabled)
+        {
+            viewfinder.SetActive(true);
+        }
         if (Input.GetMouseButtonDown(0))
         {
             shotStage = ShotStage.POWERADJUSTING;
@@ -51,6 +61,7 @@ public class BilliardStick : MonoBehaviour {
         }
         if (Input.GetMouseButtonUp(0))
         {
+            viewfinder.SetActive(false);
             shotStage = ShotStage.SHOOTING;
         }
     }
@@ -64,6 +75,23 @@ public class BilliardStick : MonoBehaviour {
             billiardBall.GetComponent<BilliardBall>().Speed = (gameObject.transform.position - previousBilliardStickPosition) / Time.deltaTime;
             gameObject.GetComponent<MeshRenderer>().enabled = false;
             shotStage = ShotStage.NOSHOT;
+        }
+    }
+
+    public void ToggleViewfinder()
+    {
+        if (Input.GetButtonDown("Toggle Viewfinder"))
+        {
+            if (viewfinder.activeInHierarchy)
+            {
+                viewfinder.SetActive(false);
+                isViewfinderEnabled = false;
+            }
+            else
+            {
+                viewfinder.SetActive(true);
+                isViewfinderEnabled = true;
+            }
         }
     }
 
@@ -85,9 +113,11 @@ public class BilliardStick : MonoBehaviour {
                 break;
             case ShotStage.AIMING:
                 Aim(GameObject.Find("White Ball"));
+                ToggleViewfinder();
                 break;
             case ShotStage.POWERADJUSTING:
                 AdjustPower();
+                ToggleViewfinder();
                 break;
             case ShotStage.SHOOTING:
                 Shot(GameObject.Find("White Ball"));
@@ -96,7 +126,7 @@ public class BilliardStick : MonoBehaviour {
                 int numberOfMovingBalls = 0;
                 for (int i = 0; i < 16; ++i)
                 {
-                    if (GameObject.Find("Manager").GetComponent<BilliardBalls>()[i].GetComponent<BilliardBall>().Speed != new Vector3(0, 0, 0))
+                    if (GameObject.Find("Billiard Balls").GetComponent<BilliardBalls>()[i].GetComponent<BilliardBall>().Speed != new Vector3(0, 0, 0))
                     {
                         ++numberOfMovingBalls;
                     }
