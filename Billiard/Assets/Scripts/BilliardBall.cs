@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class BilliardBall : MonoBehaviour
 {
@@ -241,11 +242,11 @@ public class BilliardBall : MonoBehaviour
                 {
                     if (players.IsAllBilliardBallsPocketed())
                     {
-                        //GRACZ WYGRAŁ
+                        SceneManager.LoadScene("Koniec");
                     }
                     else
                     {
-                        //GRACZ PRZEGRAŁ
+                        SceneManager.LoadScene("Koniec");
                     }
                 }
                 else

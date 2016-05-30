@@ -68,6 +68,9 @@
     <Compile Include="Assets\Scripts\BilliardStick.cs" />
     <Compile Include="Assets\Scripts\CameraController.cs" />
     <Compile Include="Assets\Scripts\CameraFollower.cs" />
+    <Compile Include="Assets\Scripts\Koniec.cs" />
+    <Compile Include="Assets\Scripts\Menu.cs" />
+    <Compile Include="Assets\Scripts\Nicknames.cs" />
     <Compile Include="Assets\Scripts\Players.cs" />
   </ItemGroup>
   <ItemGroup>

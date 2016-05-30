@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
+using System.Text;
 
 public class Players : MonoBehaviour
 {
@@ -15,6 +17,12 @@ public class Players : MonoBehaviour
     private int activePlayer;
     private bool stickUsed;
     private bool whiteBilliardBall;
+    private GameObject[] playerPanels;
+    public GameObject player1PanelText;
+    public GameObject player2PanelText;
+    public GameObject player1PanelBalls;
+    public GameObject player2PanelBalls;
+    private Text text;
 
     public bool StickUsed
     {
@@ -43,8 +51,9 @@ public class Players : MonoBehaviour
     private void InitializePlayers()
     {
         playerName = new string[2];
-        playerName[0] = "player1";
-        playerName[1] = "player2";
+        playerName[0] = Nicknames.player1Name;
+        playerName[1] = Nicknames.player2Name;
+
         player1Balls = new List<int>();
         player2Balls = new List<int>();
         ballsLeft = new int[2];
@@ -56,6 +65,13 @@ public class Players : MonoBehaviour
         activePlayer = 0;
         stickUsed = false;
         whiteBilliardBall = false;
+        playerPanels = GameObject.FindGameObjectsWithTag("Panel");
+        playerPanels[0].GetComponent<Image>().color = Color.yellow;
+        playerPanels[1].GetComponent<Image>().color = Color.white;
+        text = player1PanelText.GetComponent<Text>();
+        text.text = playerName[0];
+        text = player2PanelText.GetComponent<Text>();
+        text.text = playerName[1];
     }
 
 
@@ -67,6 +83,7 @@ public class Players : MonoBehaviour
         else
             player2Balls.Add(billiardBallNumber);
         ballsLeft[activePlayer]--;
+        ShowBalls();
     }
 
     public void WrongBillardBall()
@@ -153,13 +170,36 @@ public class Players : MonoBehaviour
 
     public void ChangePlayer()
     {
+        playerPanels[activePlayer].GetComponent<Image>().color = Color.white;
         activePlayer = (activePlayer == 0) ? 1 : 0;
-        Debug.Log(activePlayer);
+        playerPanels[activePlayer].GetComponent<Image>().color = Color.yellow;
     }
 
     public void SetWhiteBilliardBall(GameObject billardBall)
     {
         billardBall.transform.position = new Vector3(0, 0.917f, -1.106f);
+    }
+
+    public void ShowBalls()
+    {
+        StringBuilder sb = new StringBuilder();
+        foreach(int ball in player1Balls)
+        {
+            sb.Append(ball);
+            sb.Append(" ");
+        }
+        text = player1PanelBalls.GetComponent<Text>();
+        text.text = sb.ToString();
+        sb.Remove(0, sb.Length);
+
+        foreach (int ball in player2Balls)
+        {
+            sb.Append(ball);
+            sb.Append(" ");
+        }
+        text = player2PanelBalls.GetComponent<Text>();
+        text.text = sb.ToString();
+        sb.Remove(0, sb.Length);
     }
 
     
