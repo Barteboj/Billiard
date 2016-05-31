@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 
 public class BilliardBall : MonoBehaviour
@@ -18,6 +19,8 @@ public class BilliardBall : MonoBehaviour
     private GameObject[] holes;
     private GameObject[] borders;
     public Players players;
+    [SerializeField]
+    private bool pocketed;
 
     public int Number
     {
@@ -88,6 +91,18 @@ public class BilliardBall : MonoBehaviour
         set
         {
             speedDownLimit = value;
+        }
+    }
+
+    public bool Pocketed
+    {
+        get
+        {
+            return pocketed;
+        }
+        set
+        {
+           pocketed = value;
         }
     }
 
@@ -222,14 +237,13 @@ public class BilliardBall : MonoBehaviour
                 }
             }
         }
-
         foreach (GameObject hole in holes)
         {
             hole.transform.position = new Vector3(hole.transform.position.x, gameObject.transform.position.y, hole.transform.position.z);
             Vector3 offset = hole.transform.position - gameObject.transform.position;
-            if (offset.magnitude < hole.GetComponent<SphereCollider>().radius * hole.transform.localScale.x)
+            if (!pocketed && (offset.magnitude < hole.GetComponent<SphereCollider>().radius * hole.transform.localScale.x))
             {
-                // Debug.Log("Coś wbite");
+                Debug.Log("Coś wbite");
                 if (this.number == 0)
                 {
                     players.SetWhiteBilliardBall(GameObject.Find("White Ball"));
@@ -251,33 +265,28 @@ public class BilliardBall : MonoBehaviour
                 }
                 else
                 {
-                    if (!players.IsBilliardBallsPocketed(number))
-                    {
                         Debug.Log("Jestem w środku");
                         if (players.CheckBilliardBallsColor(this.number))
                         {
+                            Debug.Log("Dodaje bile");
                             players.AddBilliardBall(this.number);
+                            Debug.Log("Zmieniam na wbita");
+                            pocketed = true;
+                            players.StickUsed = false;
+                            players.balls[number] = true;
                         }
                         else
                         {
+                            Debug.Log("Zly kolor");
                             players.WrongBillardBall();
+                            Debug.Log("Zmieniam gracza");
                             players.ChangePlayer();
                         }
-                        gameObject.GetComponent<MeshRenderer>().enabled = false;
-                    }
-                    
+                        Debug.Log("Ukrywam bilę");
+                        gameObject.GetComponent<MeshRenderer>().enabled = false;                  
                 }
+                Debug.Log("Zeruje prędkość");
                 gameObject.GetComponent<BilliardBall>().speed = new Vector3(0, 0, 0);   
-            }
-            else
-            {
-                if (players.StickUsed)
-                {
-                    players.ChangePlayer();
-                    players.StickUsed = false;
-                    Debug.Log("Nic nie wpadło");
-                }
-               
             }
         }
     }
@@ -386,6 +395,7 @@ public class BilliardBall : MonoBehaviour
     {
         holes = GameObject.FindGameObjectsWithTag("Hole");
         borders = GameObject.FindGameObjectsWithTag("Border");
+        pocketed = false;
     }
 
     // Update is called once per frame

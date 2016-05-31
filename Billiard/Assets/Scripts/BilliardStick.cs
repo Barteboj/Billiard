@@ -134,6 +134,17 @@ public class BilliardStick : MonoBehaviour {
                 if (numberOfMovingBalls == 0)
                 {
                     shotStage = ShotStage.PREPARINGSHOT;
+
+                    if (!players.checkBalls())
+                    {
+                        players.ChangePlayer();
+                        players.StickUsed = false;
+                        players.setBalls();  
+                    }
+                    else
+                    {
+                        players.setBalls();
+                    }
                     if (!players.WhiteBilliardBall)
                         players.StickUsed = true;
                     else

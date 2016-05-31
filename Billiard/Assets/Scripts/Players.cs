@@ -12,6 +12,7 @@ public class Players : MonoBehaviour
     [SerializeField]
     private List<int> player2Balls;
     private int[] ballsLeft;
+    public bool[] balls;
     private int[] playerColor;
     [SerializeField]
     private int activePlayer;
@@ -23,6 +24,7 @@ public class Players : MonoBehaviour
     public GameObject player1PanelBalls;
     public GameObject player2PanelBalls;
     private Text text;
+    private bool endMove;
 
     public bool StickUsed
     {
@@ -33,6 +35,18 @@ public class Players : MonoBehaviour
         set
         {
             stickUsed = value;
+        }
+    }
+
+    public bool EndMove
+    {
+        get
+        {
+            return endMove;
+        }
+        set
+        {
+            endMove = value;
         }
     }
 
@@ -72,6 +86,7 @@ public class Players : MonoBehaviour
         text.text = playerName[0];
         text = player2PanelText.GetComponent<Text>();
         text.text = playerName[1];
+        balls = new bool[16];
     }
 
 
@@ -200,6 +215,21 @@ public class Players : MonoBehaviour
         text = player2PanelBalls.GetComponent<Text>();
         text.text = sb.ToString();
         sb.Remove(0, sb.Length);
+    }
+
+    public void setBalls()
+    {
+        for (int i = 0; i < 16; i++)
+            balls[i] = false;
+    }
+
+    public bool checkBalls()
+    {
+        bool result = false;
+        for (int i = 0; i < 16; i++)
+            if (balls[i] != false)
+                result = true;
+        return result;
     }
 
     
