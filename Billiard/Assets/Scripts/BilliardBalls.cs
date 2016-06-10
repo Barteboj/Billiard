@@ -41,11 +41,17 @@ public class BilliardBalls : MonoBehaviour
             numberOfCollisions = 0;
             for (int i = 0; i < balls.Length - 1; ++i)
             {
-                for (int j = i + 1; j < balls.Length; ++j)
+                if (balls[i].GetComponent<MeshRenderer>().enabled)
                 {
-                    if (balls[i].GetComponent<BilliardBall>().Collide(balls[j]))
+                    for (int j = i + 1; j < balls.Length; ++j)
                     {
-                        numberOfCollisions++;
+                        if (balls[j].GetComponent<MeshRenderer>().enabled)
+                        {
+                            if (balls[i].GetComponent<BilliardBall>().Collide(balls[j]))
+                            {
+                                numberOfCollisions++;
+                            }
+                        }
                     }
                 }
             }

@@ -71,6 +71,8 @@
     <Compile Include="Assets\Scripts\Koniec.cs" />
     <Compile Include="Assets\Scripts\Menu.cs" />
     <Compile Include="Assets\Scripts\Nicknames.cs" />
+    <Compile Include="Assets\Scripts\Particle.cs" />
+    <Compile Include="Assets\Scripts\ParticleEffect.cs" />
     <Compile Include="Assets\Scripts\Players.cs" />
   </ItemGroup>
   <ItemGroup>

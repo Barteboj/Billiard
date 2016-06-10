@@ -25,6 +25,9 @@ public class Players : MonoBehaviour
     public GameObject player2PanelBalls;
     private Text text;
     private bool endMove;
+    public Text player1ColorText;
+    public Text player2ColorText;
+    public GameObject[] playerParticleEffect;
 
     public bool StickUsed
     {
@@ -82,6 +85,7 @@ public class Players : MonoBehaviour
         playerPanels = GameObject.FindGameObjectsWithTag("Panel");
         playerPanels[0].GetComponent<Image>().color = Color.yellow;
         playerPanels[1].GetComponent<Image>().color = Color.white;
+        playerParticleEffect[0].SetActive(true);
         text = player1PanelText.GetComponent<Text>();
         text.text = playerName[0];
         text = player2PanelText.GetComponent<Text>();
@@ -155,12 +159,16 @@ public class Players : MonoBehaviour
             if(number < 8)
             {
                 playerColor[0] = 1;
+                player1ColorText.text = "Całe";
                 playerColor[1] = 2;
+                player2ColorText.text = "Połowki";
             }
             else
             {
                 playerColor[0] = 2;
+                player1ColorText.text = "Połowki";
                 playerColor[1] = 1;
+                player2ColorText.text = "Całe";
             }
         }
         else 
@@ -168,12 +176,16 @@ public class Players : MonoBehaviour
             if (number < 8)
             {
                 playerColor[1] = 1;
+                player2ColorText.text = "Całe";
                 playerColor[0] = 2;
+                player1ColorText.text = "Połowki";
             }
             else
             {
                 playerColor[1] = 2;
+                player1ColorText.text = "Połowki";
                 playerColor[0] = 1;
+                player2ColorText.text = "Całe";
             }
         }
     }
@@ -186,8 +198,10 @@ public class Players : MonoBehaviour
     public void ChangePlayer()
     {
         playerPanels[activePlayer].GetComponent<Image>().color = Color.white;
+        playerParticleEffect[activePlayer].SetActive(false);
         activePlayer = (activePlayer == 0) ? 1 : 0;
         playerPanels[activePlayer].GetComponent<Image>().color = Color.yellow;
+        playerParticleEffect[activePlayer].SetActive(true);
     }
 
     public void SetWhiteBilliardBall(GameObject billardBall)

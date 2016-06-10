@@ -198,42 +198,49 @@ public class BilliardBall : MonoBehaviour
 
         foreach (GameObject border in borders)
         {
-            if (border.transform.rotation.y == 0)
+            Vector3 billiardBallPosition = new Vector3(gameObject.transform.position.x, 0, gameObject.transform.position.z);
+            Vector3 borderPosition = new Vector3(border.transform.position.x, 0, border.transform.position.z);
+            Vector3 distanceVector = billiardBallPosition - borderPosition;
+            float distance = distanceVector.magnitude;
+            if (Mathf.Sqrt(Mathf.Pow(border.transform.localScale.z / 2, 2) + Mathf.Pow(border.transform.localScale.x / 2, 2)) + radius > distance)
             {
-                if ((gameObject.transform.position.z > border.transform.position.z - border.transform.localScale.z / 2 - radius && gameObject.transform.position.z < border.transform.position.z + border.transform.localScale.z / 2 + radius) && Mathf.Abs(gameObject.transform.position.x) >= Mathf.Abs(border.transform.position.x) - border.transform.localScale.x / 2 - radius)
+                if (border.transform.rotation.y == 0)
                 {
-                    if (gameObject.transform.position.x > 0 && border.transform.position.x > 0)
+                    if ((gameObject.transform.position.z > border.transform.position.z - border.transform.localScale.z / 2 - radius && gameObject.transform.position.z < border.transform.position.z + border.transform.localScale.z / 2 + radius) && Mathf.Abs(gameObject.transform.position.x) >= Mathf.Abs(border.transform.position.x) - border.transform.localScale.x / 2 - radius)
                     {
-                        Roll(new Vector3(border.transform.position.x - border.transform.localScale.x / 2 - radius - gameObject.transform.position.x, 0, 0));
-                        speed = new Vector3(-speed.x, speed.y, speed.z);
-                        return;
+                        if (gameObject.transform.position.x > 0 && border.transform.position.x > 0)
+                        {
+                            Roll(new Vector3(border.transform.position.x - border.transform.localScale.x / 2 - radius - gameObject.transform.position.x, 0, 0));
+                            speed = new Vector3(-speed.x, speed.y, speed.z);
+                            return;
+                        }
+                        else if (gameObject.transform.position.x < 0 && border.transform.position.x < 0)
+                        {
+                            Roll(new Vector3(border.transform.position.x + border.transform.localScale.x / 2 + radius - gameObject.transform.position.x, 0, 0));
+                            speed = new Vector3(-speed.x, speed.y, speed.z);
+                            return;
+                        }
+                        //Debug.Log(border.name);
                     }
-                    else if (gameObject.transform.position.x < 0 && border.transform.position.x < 0)
-                    {
-                        Roll(new Vector3(border.transform.position.x + border.transform.localScale.x / 2 + radius - gameObject.transform.position.x, 0, 0));
-                        speed = new Vector3(-speed.x, speed.y, speed.z);
-                        return;
-                    }
-                    //Debug.Log(border.name);
                 }
-            }
-            else
-            {
-                if ((gameObject.transform.position.x > border.transform.position.x - border.transform.localScale.z / 2 - radius && gameObject.transform.position.x < border.transform.position.x + border.transform.localScale.z / 2 + radius) && Mathf.Abs(gameObject.transform.position.z) >= Mathf.Abs(border.transform.position.z) - border.transform.localScale.x / 2 - radius)
+                else
                 {
-                    if (gameObject.transform.position.z > 0 && border.transform.position.z > 0)
+                    if ((gameObject.transform.position.x > border.transform.position.x - border.transform.localScale.z / 2 - radius && gameObject.transform.position.x < border.transform.position.x + border.transform.localScale.z / 2 + radius) && Mathf.Abs(gameObject.transform.position.z) >= Mathf.Abs(border.transform.position.z) - border.transform.localScale.x / 2 - radius)
                     {
-                        Roll(new Vector3(0, 0, border.transform.position.z - border.transform.localScale.x / 2 - radius - gameObject.transform.position.z));
-                        speed = new Vector3(speed.x, speed.y, -speed.z);
-                        return;
+                        if (gameObject.transform.position.z > 0 && border.transform.position.z > 0)
+                        {
+                            Roll(new Vector3(0, 0, border.transform.position.z - border.transform.localScale.x / 2 - radius - gameObject.transform.position.z));
+                            speed = new Vector3(speed.x, speed.y, -speed.z);
+                            return;
+                        }
+                        else if (gameObject.transform.position.z < 0 && border.transform.position.z < 0)
+                        {
+                            Roll(new Vector3(0, 0, border.transform.position.z + border.transform.localScale.x / 2 + radius - gameObject.transform.position.z));
+                            speed = new Vector3(speed.x, speed.y, -speed.z);
+                            return;
+                        }
+                        //Debug.Log(border.name);
                     }
-                    else if (gameObject.transform.position.z < 0 && border.transform.position.z < 0)
-                    {
-                        Roll(new Vector3(0, 0, border.transform.position.z + border.transform.localScale.x / 2 + radius - gameObject.transform.position.z));
-                        speed = new Vector3(speed.x, speed.y, -speed.z);
-                        return;
-                    }
-                    //Debug.Log(border.name);
                 }
             }
         }
@@ -297,7 +304,7 @@ public class BilliardBall : MonoBehaviour
         {
             float distanceBetweenObjects = Mathf.Sqrt(Mathf.Pow(gameObject.transform.position.x - collidingObject.transform.position.x, 2) + Mathf.Pow(gameObject.transform.position.z - collidingObject.transform.position.z, 2));
             float radiusesSum = gameObject.GetComponent<BilliardBall>().radius + collidingObject.GetComponent<BilliardBall>().radius;
-            if (distanceBetweenObjects < radiusesSum - 0.00001) //- 0.00001 to prevent collisions in triangle
+            if (distanceBetweenObjects < radiusesSum - 0.00001 && collidingObject.GetComponent<MeshRenderer>().enabled) //- 0.00001 to prevent collisions in triangle
             {
                 return true;
             }

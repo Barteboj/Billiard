@@ -26,7 +26,8 @@ public class CameraController : MonoBehaviour
             case CameraState.TOPDOWN:
                 this.cameraState = CameraState.TOPDOWN;
                 gameObject.transform.position = new Vector3(billiardTableTransform.position.x, billiardTableTransform.position.y + topDownHeight, billiardTableTransform.position.z);
-                gameObject.transform.forward = Vector3.down;
+                gameObject.transform.right = Vector3.forward;
+                gameObject.transform.Rotate(0, 0, 90, Space.World);
                 rotateCameraText.enabled = false;
                 moveCameraText.enabled = true;
                 break;
@@ -93,7 +94,7 @@ public class CameraController : MonoBehaviour
 
     public void MoveCamera()
     {
-        gameObject.transform.Translate(Input.GetAxis("Horizontal") * Time.deltaTime, 0, Input.GetAxis("Vertical") * Time.deltaTime, Space.World);
+        gameObject.transform.Translate(-Input.GetAxis("Vertical") * Time.deltaTime, 0, Input.GetAxis("Horizontal") * Time.deltaTime, Space.World);
     }
 
     // Use this for initialization
