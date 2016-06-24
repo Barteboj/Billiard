@@ -286,8 +286,12 @@ public class BilliardBall : MonoBehaviour
                         {
                             Debug.Log("Zly kolor");
                             players.WrongBillardBall();
+                            pocketed = true;
                             Debug.Log("Zmieniam gracza");
                             players.ChangePlayer();
+                            players.AddBilliardBall(this.number);
+                            players.StickUsed = false;
+                            players.balls[number] = true;
                         }
                         Debug.Log("Ukrywam bilę");
                         gameObject.GetComponent<MeshRenderer>().enabled = false;                  
