@@ -4,15 +4,23 @@ using System.Collections;
 public class Particle : MonoBehaviour {
 
     public float lifeTime;
+
     public float speed;
 
-	// Use this for initialization
-	void Start () {
+    private float bornTime;
+
+    private Material material;
+    
+	void Start ()
+    {
+        bornTime = Time.time;
+        material = gameObject.GetComponent<MeshRenderer>().material;
         Destroy(gameObject, lifeTime);
 	}
 	
-	// Update is called once per frame
-	void Update () {
-        gameObject.transform.Translate(-speed * Time.deltaTime, 0, 0, Space.World);
+	void Update ()
+    {
+        gameObject.transform.Translate(gameObject.transform.up * speed * Time.deltaTime, Space.World);
+        material.color = new Color(material.color.r, material.color.g, material.color.b, 1 - ((Time.time - bornTime) / lifeTime));
 	}
 }

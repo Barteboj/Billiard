@@ -17,10 +17,14 @@ public class CameraController : MonoBehaviour
     public Text rotateCameraText;
     public Text moveCameraText;
 
-    private CameraState cameraState;
+    public CameraState cameraState;
 
     public void SetCameraState(CameraState cameraState)
     {
+        foreach (ParticleEmitter particleEmitter in FindObjectsOfType<ParticleEmitter>())
+        {
+            particleEmitter.SignalDestroyingAllParticles();
+        }
         switch (cameraState)
         {
             case CameraState.TOPDOWN:
