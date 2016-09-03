@@ -25,6 +25,7 @@ public class Players : MonoBehaviour
     public GameObject player2PanelBalls;
     private Text text;
     private bool endMove;
+    private bool wasFoul;
     public Text player1ColorText;
     public Text player2ColorText;
     public GameObject[] playerParticleEffect;
@@ -65,12 +66,42 @@ public class Players : MonoBehaviour
         }
     }
 
+    public bool WasFoul
+    {
+        get
+        {
+            return wasFoul;
+        }
+        set
+        {
+            wasFoul = value;
+        }
+    }
+
+    public string GetActivePlayerName()
+    {
+        return playerName[activePlayer];
+    }
+
     private void InitializePlayers()
     {
         playerName = new string[2];
-        playerName[0] = Nicknames.player1Name;
-        playerName[1] = Nicknames.player2Name;
-
+        if (Nicknames.player1Name == null || Nicknames.player1Name == "")
+        {
+            playerName[0] = "Player 1";
+        }
+        else
+        {
+            playerName[0] = Nicknames.player1Name;
+        }
+        if (Nicknames.player2Name == null || Nicknames.player2Name == "")
+        {
+            playerName[1] = "Player 2";
+        }
+        else
+        {
+            playerName[1] = Nicknames.player2Name;
+        }
         player1Balls = new List<int>();
         player2Balls = new List<int>();
         ballsLeft = new int[2];
@@ -97,10 +128,20 @@ public class Players : MonoBehaviour
     public void AddBilliardBall(int billiardBallNumber)
     {
         Debug.Log(billiardBallNumber);
-        if(activePlayer == 0)
-            player1Balls.Add(billiardBallNumber);
+        if (wasFoul)
+        {
+            if (activePlayer == 0)
+                player2Balls.Add(billiardBallNumber);
+            else
+                player1Balls.Add(billiardBallNumber);
+        }
         else
-            player2Balls.Add(billiardBallNumber);
+        {
+            if (activePlayer == 0)
+                player1Balls.Add(billiardBallNumber);
+            else
+                player2Balls.Add(billiardBallNumber);
+        }
         ballsLeft[activePlayer]--;
         ShowBalls();
     }
@@ -202,10 +243,12 @@ public class Players : MonoBehaviour
         activePlayer = (activePlayer == 0) ? 1 : 0;
         playerPanels[activePlayer].GetComponent<Image>().color = Color.yellow;
         playerParticleEffect[activePlayer].SetActive(true);
+        wasFoul = false;
     }
 
     public void SetWhiteBilliardBall(GameObject billardBall)
     {
+        billardBall.GetComponent<MeshRenderer>().enabled = true;
         billardBall.transform.position = new Vector3(0, 0.917f, -1.106f);
     }
 
@@ -251,8 +294,8 @@ public class Players : MonoBehaviour
     // Use this for initialization
     void Start () {
         InitializePlayers();
-	
-	}
+        wasFoul = false;
+    }
 	
 	// Update is called once per frame
 	void Update () {

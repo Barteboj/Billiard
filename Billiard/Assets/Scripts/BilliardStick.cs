@@ -28,9 +28,23 @@ public class BilliardStick : MonoBehaviour {
 
     public void Aim(GameObject billiardBall)
     {
-        gameObject.transform.RotateAround(billiardBall.transform.position, Vector3.up, Input.GetAxis("Mouse X") * 120 * Time.deltaTime);
+        //offset.y = gameObject.transform.forward.y;
+        Vector3 mousePos = Input.mousePosition;
+        mousePos.z = Camera.main.transform.position.y - gameObject.transform.position.y;
+        //Vector3 offset = mousePos - gameObject.transform.position;
+        //offset.y = gameObject.transform.forward.y;
+        //Debug.DrawRay(gameObject.transform.position, offset);
+        //Debug.Log(Camera.main.ScreenToWorldPoint(mousePos));
+        //offset.y = gameObject.transform.forward.y;
+        //mousePos.y = gameObject.transform.position.y;
+        Vector3 posToLookAt = Camera.main.ScreenToWorldPoint(mousePos);
+        posToLookAt.y = gameObject.transform.position.y;
+        gameObject.transform.position = billiardBall.transform.position;
+        gameObject.transform.LookAt(posToLookAt);
+        gameObject.transform.Translate(0, 0, -(length + billiardBall.GetComponent<BilliardBall>().Radius + 0.05f));
+        /*gameObject.transform.RotateAround(billiardBall.transform.position, Vector3.up, Input.GetAxis("Mouse X") * 120 * Time.deltaTime);
         viewfinder.transform.position = billiardBall.transform.position;
-        viewfinder.transform.rotation = gameObject.transform.rotation;
+        viewfinder.transform.rotation = gameObject.transform.rotation;*/
         if (isViewfinderEnabled)
         {
             viewfinder.SetActive(true);
@@ -134,10 +148,19 @@ public class BilliardStick : MonoBehaviour {
                 if (numberOfMovingBalls == 0)
                 {
                     shotStage = ShotStage.PREPARINGSHOT;
-
-                    if (!players.checkBalls())
+                    if (players.WasFoul)
+                    {
+                        string[] messages = new string[2];
+                        players.ChangePlayer();
+                        players.SetWhiteBilliardBall(GameObject.Find("White Ball"));
+                        messages[0] = "Foul";
+                        messages[1] = players.GetActivePlayerName() + "'s turn";
+                        FindObjectOfType<MessagesController>().ShowMessagesSequence(messages);
+                    }
+                    else if (!players.checkBalls())
                     {
                         players.ChangePlayer();
+                        FindObjectOfType<MessagesController>().ShowMessage(players.GetActivePlayerName() + "'s turn");
                         players.StickUsed = false;
                         players.setBalls();  
                     }
