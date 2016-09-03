@@ -1,4 +1,0 @@
-sceneSetups:
-- path: Assets/Scenes/Billiard room.unity
-  isLoaded: 1
-  isActive: 1
