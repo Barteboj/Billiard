@@ -103,7 +103,7 @@ public class BilliardBall : MonoBehaviour
         }
         set
         {
-           pocketed = value;
+            pocketed = value;
         }
     }
 
@@ -124,7 +124,8 @@ public class BilliardBall : MonoBehaviour
             {
                 speed.x -= friction * Mathf.Abs(speed.x / (Mathf.Abs(speed.x) + Mathf.Abs(speed.z))) * Time.deltaTime;
             }
-            else {
+            else
+            {
                 speed.x += friction * Mathf.Abs(speed.x / (Mathf.Abs(speed.x) + Mathf.Abs(speed.z))) * Time.deltaTime;
             }
 
@@ -132,7 +133,8 @@ public class BilliardBall : MonoBehaviour
             {
                 speed.z -= friction * Mathf.Abs(speed.z / (Mathf.Abs(speed.x) + Mathf.Abs(speed.z))) * Time.deltaTime;
             }
-            else {
+            else
+            {
                 speed.z += friction * Mathf.Abs(speed.z / (Mathf.Abs(speed.x) + Mathf.Abs(speed.z))) * Time.deltaTime;
             }
         }
@@ -177,11 +179,12 @@ public class BilliardBall : MonoBehaviour
     {
         foreach (GameObject border in borders)
         {
+            Vector3 borderEulerAngles = border.transform.eulerAngles;
             Vector3 billiardBallPosition = new Vector3(gameObject.transform.position.x, 0, gameObject.transform.position.z);
             Vector3 borderPosition = new Vector3(border.transform.position.x, 0, border.transform.position.z);
             Vector3 distanceVector = billiardBallPosition - borderPosition;
             float distance = distanceVector.magnitude;
-            if (border.transform.eulerAngles.y > 300)
+            if (borderEulerAngles.y > 300)
             {
                 if (distance < border.transform.localScale.x * Mathf.Sqrt(2) / 2 + radius && ((gameObject.transform.position.z > border.transform.position.z && border.transform.position.x < 0) || (gameObject.transform.position.x > border.transform.position.x && border.transform.position.x > 0)))
                 {
@@ -189,7 +192,7 @@ public class BilliardBall : MonoBehaviour
                     speed = new Vector3(-speed.z, speed.y, -speed.x);
                 }
             }
-            else if (border.transform.eulerAngles.y > 40 && border.transform.eulerAngles.y < 50)
+            else if (borderEulerAngles.y > 40 && borderEulerAngles.y < 50)
             {
                 if (distance < border.transform.localScale.x * Mathf.Sqrt(2) / 2 + radius && ((gameObject.transform.position.z < border.transform.position.z && border.transform.position.x < 0) || (gameObject.transform.position.x > border.transform.position.x && border.transform.position.x > 0)))
                 {
@@ -197,7 +200,7 @@ public class BilliardBall : MonoBehaviour
                     speed = new Vector3(speed.z, speed.y, speed.x);
                 }
             }
-            else if (border.transform.eulerAngles.y > 130 && border.transform.eulerAngles.y < 140)
+            else if (borderEulerAngles.y > 130 && borderEulerAngles.y < 140)
             {
                 if (distance < border.transform.localScale.x * Mathf.Sqrt(2) / 2 + radius && ((gameObject.transform.position.x < border.transform.position.x && border.transform.position.x < 0) || (gameObject.transform.position.z < border.transform.position.z && border.transform.position.x > 0)))
                 {
@@ -205,7 +208,7 @@ public class BilliardBall : MonoBehaviour
                     speed = new Vector3(-speed.z, speed.y, -speed.x);
                 }
             }
-            else if (border.transform.eulerAngles.y > 220 && border.transform.eulerAngles.y < 230)
+            else if (borderEulerAngles.y > 220 && borderEulerAngles.y < 230)
             {
                 if (distance < border.transform.localScale.x * Mathf.Sqrt(2) / 2 + radius && ((gameObject.transform.position.z > border.transform.position.z && border.transform.position.x > 0) || (gameObject.transform.position.x < border.transform.position.x && border.transform.position.x < 0)))
                 {
@@ -282,34 +285,34 @@ public class BilliardBall : MonoBehaviour
                 }
                 else
                 {
-                        Debug.Log("Jestem w środku");
-                        if (players.CheckBilliardBallsColor(this.number))
-                        {
-                            FindObjectOfType<MessagesController>().ShowMessage(players.GetActivePlayerName() + " pocketed ball number " + number);
-                            Debug.Log("Dodaje bile");
-                            players.AddBilliardBall(this.number);
-                            Debug.Log("Zmieniam na wbita");
-                            pocketed = true;
-                            players.StickUsed = false;
-                            players.balls[number] = true;
-                        }
-                        else
-                        {
+                    Debug.Log("Jestem w środku");
+                    if (players.CheckBilliardBallsColor(this.number))
+                    {
+                        FindObjectOfType<MessagesController>().ShowMessage(players.GetActivePlayerName() + " pocketed ball number " + number);
+                        Debug.Log("Dodaje bile");
+                        players.AddBilliardBall(this.number);
+                        Debug.Log("Zmieniam na wbita");
+                        pocketed = true;
+                        players.StickUsed = false;
+                        players.balls[number] = true;
+                    }
+                    else
+                    {
                         FindObjectOfType<MessagesController>().ShowMessage(players.GetActivePlayerName() + " pocketed ball number " + number);
                         Debug.Log("Zly kolor");
-                            players.WrongBillardBall();
-                            pocketed = true;
-                            Debug.Log("Zmieniam gracza");
-                            FindObjectOfType<Players>().WasFoul = true;
-                            players.AddBilliardBall(this.number);
-                            players.StickUsed = false;
-                            players.balls[number] = true;
-                        }
-                        Debug.Log("Ukrywam bilę");
-                        gameObject.GetComponent<MeshRenderer>().enabled = false;                  
+                        players.WrongBillardBall();
+                        pocketed = true;
+                        Debug.Log("Zmieniam gracza");
+                        FindObjectOfType<Players>().WasFoul = true;
+                        players.AddBilliardBall(this.number);
+                        players.StickUsed = false;
+                        players.balls[number] = true;
+                    }
+                    Debug.Log("Ukrywam bilę");
+                    gameObject.GetComponent<MeshRenderer>().enabled = false;
                 }
                 Debug.Log("Zeruje prędkość");
-                gameObject.GetComponent<BilliardBall>().speed = new Vector3(0, 0, 0);   
+                gameObject.GetComponent<BilliardBall>().speed = new Vector3(0, 0, 0);
             }
         }
     }
@@ -318,7 +321,7 @@ public class BilliardBall : MonoBehaviour
     {
         if (collidingObject.GetComponent<BilliardBall>())
         {
-            float distanceBetweenObjects = Mathf.Sqrt(Mathf.Pow(gameObject.transform.position.x - collidingObject.transform.position.x, 2) + Mathf.Pow(gameObject.transform.position.z - collidingObject.transform.position.z, 2));
+            float distanceBetweenObjects = Vector3.Distance(gameObject.transform.position, collidingObject.transform.position);
             float radiusesSum = gameObject.GetComponent<BilliardBall>().radius + collidingObject.GetComponent<BilliardBall>().radius;
             if (distanceBetweenObjects < radiusesSum - 0.00001 && collidingObject.GetComponent<MeshRenderer>().enabled) //- 0.00001 to prevent collisions in triangle
             {
@@ -329,7 +332,8 @@ public class BilliardBall : MonoBehaviour
                 return false;
             }
         }
-        else {
+        else
+        {
             return false;
         }
     }
@@ -357,41 +361,29 @@ public class BilliardBall : MonoBehaviour
         //when balls overlapping each other than push them aside
         if (distanceBetweenObjects < radiusesSum)
         {
-            /*if ((speed != new Vector3(0, 0, 0) && collidingObject.GetComponent<BilliardBall>().speed != new Vector3(0, 0, 0)))
+            Vector3 vectorBetweenBalls = new Vector3(collidingObject.transform.position.x - gameObject.transform.position.x, 0, collidingObject.transform.position.z - gameObject.transform.position.z);
+            Vector3 overlapVector = vectorBetweenBalls.normalized * radius * 2 - vectorBetweenBalls;
+            if (gameObject.transform.position.x >= collidingObject.transform.position.x)
             {
-                while (distanceBetweenObjects < radiusesSum)
-                {
-                    gameObject.transform.position -= speed / 10;
-                    collidingObject.transform.position -= collidingObject.GetComponent<BilliardBall>().speed / 10;
-                    distanceBetweenObjects = Mathf.Sqrt(Mathf.Pow(gameObject.transform.position.x - collidingObject.transform.position.x, 2) + Mathf.Pow(gameObject.transform.position.z - collidingObject.transform.position.z, 2));
-                }
+                Roll(new Vector3(Mathf.Abs(overlapVector.x / 2), 0, 0));
+                collidingObjectComponent.Roll(new Vector3(-Mathf.Abs(overlapVector.x / 2), 0, 0));
             }
             else
-            {*/
-                Vector3 vectorBetweenBalls = new Vector3(collidingObject.transform.position.x - gameObject.transform.position.x, 0, collidingObject.transform.position.z - gameObject.transform.position.z);
-                Vector3 overlapVector = vectorBetweenBalls.normalized * radius * 2 - vectorBetweenBalls;
-                if (gameObject.transform.position.x >= collidingObject.transform.position.x)
-                {
-                    Roll(new Vector3(Mathf.Abs(overlapVector.x / 2), 0, 0));
-                    collidingObjectComponent.Roll(new Vector3(-Mathf.Abs(overlapVector.x / 2), 0, 0));
-                }
-                else
-                {
-                    Roll(new Vector3(-Mathf.Abs(overlapVector.x), 0, 0));
-                    collidingObjectComponent.Roll(new Vector3(Mathf.Abs(overlapVector.x / 2), 0, 0));
-                }
+            {
+                Roll(new Vector3(-Mathf.Abs(overlapVector.x), 0, 0));
+                collidingObjectComponent.Roll(new Vector3(Mathf.Abs(overlapVector.x / 2), 0, 0));
+            }
 
-                if (gameObject.transform.position.z >= collidingObject.transform.position.z)
-                {
-                    Roll(new Vector3(0, 0, Mathf.Abs(overlapVector.z / 2)));
-                    collidingObjectComponent.Roll(new Vector3(0, 0, -Mathf.Abs(overlapVector.z / 2)));
-                }
-                else
-                {
-                    Roll(new Vector3(0, 0, -Mathf.Abs(overlapVector.z / 2)));
-                    collidingObjectComponent.Roll(new Vector3(0, 0, Mathf.Abs(overlapVector.z / 2)));
-                }
-            //}
+            if (gameObject.transform.position.z >= collidingObject.transform.position.z)
+            {
+                Roll(new Vector3(0, 0, Mathf.Abs(overlapVector.z / 2)));
+                collidingObjectComponent.Roll(new Vector3(0, 0, -Mathf.Abs(overlapVector.z / 2)));
+            }
+            else
+            {
+                Roll(new Vector3(0, 0, -Mathf.Abs(overlapVector.z / 2)));
+                collidingObjectComponent.Roll(new Vector3(0, 0, Mathf.Abs(overlapVector.z / 2)));
+            }
         }
 
         float dx = collidingObject.transform.position.x - gameObject.transform.position.x;
@@ -404,24 +396,24 @@ public class BilliardBall : MonoBehaviour
         collidingObject.GetComponent<BilliardBall>().speed.x -= lambda * dx;
         collidingObject.GetComponent<BilliardBall>().speed.z -= lambda * dz;
     }
-
-    //standard ball move
+    
     public void Move()
     {
         Accelarate();
-        Collide();
+        if (speed != Vector3.zero)
+        {
+            Collide();
+        }
         Roll(speed * Time.deltaTime);
     }
-
-    // Use this for initialization
+    
     void Start()
     {
         holes = GameObject.FindGameObjectsWithTag("Hole");
         borders = GameObject.FindGameObjectsWithTag("Border");
         pocketed = false;
     }
-
-    // Update is called once per frame
+    
     void Update()
     {
         Move();

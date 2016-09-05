@@ -3,9 +3,19 @@ using System.Collections;
 
 public class BilliardBalls : MonoBehaviour
 {
+    public enum BallType
+    {
+        Full,
+        Half,
+        FullOrHalf
+    }
 
     [SerializeField]
     private GameObject[] balls;
+    public Sprite[] ballsSprites;
+    public Sprite fullBallSprite;
+    public Sprite halfBallSprite;
+    public Sprite fullOrHalfBallSprite;
 
     public GameObject[] Balls
     {
@@ -41,13 +51,14 @@ public class BilliardBalls : MonoBehaviour
             numberOfCollisions = 0;
             for (int i = 0; i < balls.Length - 1; ++i)
             {
+                BilliardBall ballIBilliardBall = balls[i].GetComponent<BilliardBall>();
                 if (balls[i].GetComponent<MeshRenderer>().enabled)
                 {
                     for (int j = i + 1; j < balls.Length; ++j)
                     {
                         if (balls[j].GetComponent<MeshRenderer>().enabled)
                         {
-                            if (balls[i].GetComponent<BilliardBall>().Collide(balls[j]))
+                            if (ballIBilliardBall.Collide(balls[j]))
                             {
                                 numberOfCollisions++;
                             }
