@@ -1,7 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public enum ShotStage { PREPARINGSHOT, AIMING, POWERADJUSTING, SHOOTING, NOSHOT}
+public enum ShotStage
+{
+    PREPARINGSHOT,
+    AIMING,
+    POWERADJUSTING,
+    SHOOTING,
+    NOSHOT
+}
 
 public class BilliardStick : MonoBehaviour {
 
@@ -16,6 +23,7 @@ public class BilliardStick : MonoBehaviour {
     public Players players;
 
     public GameObject viewfinder;
+    public AudioSource stickHitBallAudioSource;
 
     public void PrepareShot(GameObject billiardBall)
     {
@@ -28,23 +36,13 @@ public class BilliardStick : MonoBehaviour {
 
     public void Aim(GameObject billiardBall)
     {
-        //offset.y = gameObject.transform.forward.y;
         Vector3 mousePos = Input.mousePosition;
         mousePos.z = Camera.main.transform.position.y - gameObject.transform.position.y;
-        //Vector3 offset = mousePos - gameObject.transform.position;
-        //offset.y = gameObject.transform.forward.y;
-        //Debug.DrawRay(gameObject.transform.position, offset);
-        //Debug.Log(Camera.main.ScreenToWorldPoint(mousePos));
-        //offset.y = gameObject.transform.forward.y;
-        //mousePos.y = gameObject.transform.position.y;
         Vector3 posToLookAt = Camera.main.ScreenToWorldPoint(mousePos);
         posToLookAt.y = gameObject.transform.position.y;
         gameObject.transform.position = billiardBall.transform.position;
         gameObject.transform.LookAt(posToLookAt);
         gameObject.transform.Translate(0, 0, -(length + billiardBall.GetComponent<BilliardBall>().Radius + 0.05f));
-        /*gameObject.transform.RotateAround(billiardBall.transform.position, Vector3.up, Input.GetAxis("Mouse X") * 120 * Time.deltaTime);
-        viewfinder.transform.position = billiardBall.transform.position;
-        viewfinder.transform.rotation = gameObject.transform.rotation;*/
         if (isViewfinderEnabled)
         {
             viewfinder.SetActive(true);
@@ -86,6 +84,8 @@ public class BilliardStick : MonoBehaviour {
         gameObject.transform.Translate(0, 0, -shotPower * 5 * Time.deltaTime);
         if (Vector3.Distance(gameObject.transform.position, billiardBall.transform.position) < length + 0.03)
         {
+            stickHitBallAudioSource.volume = Mathf.Abs(shotPower / 1.5f);
+            stickHitBallAudioSource.Play();
             billiardBall.GetComponent<BilliardBall>().Speed = (gameObject.transform.position - previousBilliardStickPosition) / Time.deltaTime;
             gameObject.GetComponent<MeshRenderer>().enabled = false;
             shotStage = ShotStage.NOSHOT;
@@ -108,18 +108,18 @@ public class BilliardStick : MonoBehaviour {
             }
         }
     }
-
-	// Use this for initialization
-	void Start () {
+    
+	void Start ()
+    {
         gameObject.GetComponent<MeshRenderer>().enabled = false;
         shotPower = 0.01f;
         shotStage = ShotStage.NOSHOT;
         length = 1.48f;
         PrepareShot(GameObject.Find("White Ball"));
 	}
-	
-	// Update is called once per frame
-	void Update () {
+
+	void Update ()
+    {
         switch (shotStage)
         {
             case ShotStage.PREPARINGSHOT:

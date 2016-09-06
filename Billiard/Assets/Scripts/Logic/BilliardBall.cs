@@ -22,6 +22,9 @@ public class BilliardBall : MonoBehaviour
     public Players players;
     [SerializeField]
     private bool pocketed;
+    private AudioSource billiardBallAudioSource;
+    public AudioSource billiardBallHitsRailAudioSource;
+    public AudioSource billiardBallPocketedAudioSource;
 
     public int Number
     {
@@ -113,12 +116,16 @@ public class BilliardBall : MonoBehaviour
         speedDownLimit = 0.02f;
     }
 
-    //decelerate because of the friction
+    void Awake()
+    {
+        billiardBallAudioSource = gameObject.GetComponent<AudioSource>();
+    }
+
     public void Accelarate()
     {
         Vector3 previousSpeed = speed;
 
-        if (previousSpeed != new Vector3(0, 0, 0))
+        if (previousSpeed != Vector3.zero)
         {
             if (previousSpeed.x > 0)
             {
@@ -138,14 +145,12 @@ public class BilliardBall : MonoBehaviour
                 speed.z += friction * Mathf.Abs(speed.z / (Mathf.Abs(speed.x) + Mathf.Abs(speed.z))) * Time.deltaTime;
             }
         }
-
         if (Mathf.Sqrt(Mathf.Pow(speed.x, 2) + Mathf.Pow(speed.z, 2)) < speedDownLimit)
         {
             speed = new Vector3(0, 0, 0);
         }
     }
 
-    //ball rolling on the table
     public void Roll()
     {
         Vector3 appliedRotation;
@@ -174,7 +179,6 @@ public class BilliardBall : MonoBehaviour
         gameObject.transform.Rotate(rotation.x, rotation.y, rotation.z, Space.World);
     }
 
-    //collisions with borders of table
     public void Collide()
     {
         foreach (GameObject border in borders)
@@ -190,6 +194,7 @@ public class BilliardBall : MonoBehaviour
                 {
                     Roll(new Vector3(((border.transform.localScale.x * Mathf.Sqrt(2) / 2 + radius) - distance) * Mathf.Sqrt(2) / 2, 0, ((border.transform.localScale.x * Mathf.Sqrt(2) / 2 + radius) - distance) * Mathf.Sqrt(2) / 2));
                     speed = new Vector3(-speed.z, speed.y, -speed.x);
+                    billiardBallHitsRailAudioSource.Play();
                 }
             }
             else if (borderEulerAngles.y > 40 && borderEulerAngles.y < 50)
@@ -198,6 +203,7 @@ public class BilliardBall : MonoBehaviour
                 {
                     Roll(new Vector3(((border.transform.localScale.x * Mathf.Sqrt(2) / 2 + radius) - distance) * Mathf.Sqrt(2) / 2, 0, -((border.transform.localScale.x * Mathf.Sqrt(2) / 2 + radius) - distance) * Mathf.Sqrt(2) / 2));
                     speed = new Vector3(speed.z, speed.y, speed.x);
+                    billiardBallHitsRailAudioSource.Play();
                 }
             }
             else if (borderEulerAngles.y > 130 && borderEulerAngles.y < 140)
@@ -206,6 +212,7 @@ public class BilliardBall : MonoBehaviour
                 {
                     Roll(new Vector3(-((border.transform.localScale.x * Mathf.Sqrt(2) / 2 + radius) - distance) * Mathf.Sqrt(2) / 2, 0, -((border.transform.localScale.x * Mathf.Sqrt(2) / 2 + radius) - distance) * Mathf.Sqrt(2) / 2));
                     speed = new Vector3(-speed.z, speed.y, -speed.x);
+                    billiardBallHitsRailAudioSource.Play();
                 }
             }
             else if (borderEulerAngles.y > 220 && borderEulerAngles.y < 230)
@@ -214,6 +221,7 @@ public class BilliardBall : MonoBehaviour
                 {
                     Roll(new Vector3(-((border.transform.localScale.x * Mathf.Sqrt(2) / 2 + radius) - distance) * Mathf.Sqrt(2) / 2, 0, ((border.transform.localScale.x * Mathf.Sqrt(2) / 2 + radius) - distance) * Mathf.Sqrt(2) / 2));
                     speed = new Vector3(speed.z, speed.y, speed.x);
+                    billiardBallHitsRailAudioSource.Play();
                 }
             }
             else if (Mathf.Sqrt(Mathf.Pow(border.transform.localScale.z / 2, 2) + Mathf.Pow(border.transform.localScale.x / 2, 2)) + radius > distance)
@@ -226,12 +234,14 @@ public class BilliardBall : MonoBehaviour
                         {
                             Roll(new Vector3(border.transform.position.x - border.transform.localScale.x / 2 - radius - gameObject.transform.position.x, 0, 0));
                             speed = new Vector3(-speed.x, speed.y, speed.z);
+                            billiardBallHitsRailAudioSource.Play();
                             return;
                         }
                         else if (gameObject.transform.position.x < 0 && border.transform.position.x < 0)
                         {
                             Roll(new Vector3(border.transform.position.x + border.transform.localScale.x / 2 + radius - gameObject.transform.position.x, 0, 0));
                             speed = new Vector3(-speed.x, speed.y, speed.z);
+                            billiardBallHitsRailAudioSource.Play();
                             return;
                         }
                     }
@@ -244,12 +254,14 @@ public class BilliardBall : MonoBehaviour
                         {
                             Roll(new Vector3(0, 0, border.transform.position.z - border.transform.localScale.x / 2 - radius - gameObject.transform.position.z));
                             speed = new Vector3(speed.x, speed.y, -speed.z);
+                            billiardBallHitsRailAudioSource.Play();
                             return;
                         }
                         else if (gameObject.transform.position.z < 0 && border.transform.position.z < 0)
                         {
                             Roll(new Vector3(0, 0, border.transform.position.z + border.transform.localScale.x / 2 + radius - gameObject.transform.position.z));
                             speed = new Vector3(speed.x, speed.y, -speed.z);
+                            billiardBallHitsRailAudioSource.Play();
                             return;
                         }
                     }
@@ -262,13 +274,12 @@ public class BilliardBall : MonoBehaviour
             Vector3 offset = hole.transform.position - gameObject.transform.position;
             if (!pocketed && (offset.magnitude < 0.5f * hole.transform.localScale.x))
             {
-                Debug.Log("Coś wbite");
+                billiardBallPocketedAudioSource.Play();
                 if (this.number == 0)
                 {
                     FindObjectOfType<MessagesController>().ShowMessage(players.GetActivePlayerName() + " pocketed white ball");
                     FindObjectOfType<Players>().WasFoul = true;
                     players.StickUsed = false;
-                    Debug.Log("Biała wpadła");
                     players.WhiteBilliardBall = true;
                     gameObject.GetComponent<MeshRenderer>().enabled = false;
                 }
@@ -285,13 +296,10 @@ public class BilliardBall : MonoBehaviour
                 }
                 else
                 {
-                    Debug.Log("Jestem w środku");
                     if (players.CheckBilliardBallsColor(this.number))
                     {
                         FindObjectOfType<MessagesController>().ShowMessage(players.GetActivePlayerName() + " pocketed ball number " + number);
-                        Debug.Log("Dodaje bile");
                         players.AddBilliardBall(this.number);
-                        Debug.Log("Zmieniam na wbita");
                         pocketed = true;
                         players.StickUsed = false;
                         players.balls[number] = true;
@@ -299,19 +307,15 @@ public class BilliardBall : MonoBehaviour
                     else
                     {
                         FindObjectOfType<MessagesController>().ShowMessage(players.GetActivePlayerName() + " pocketed ball number " + number);
-                        Debug.Log("Zly kolor");
                         players.WrongBillardBall();
                         pocketed = true;
-                        Debug.Log("Zmieniam gracza");
                         FindObjectOfType<Players>().WasFoul = true;
                         players.AddBilliardBall(this.number);
                         players.StickUsed = false;
                         players.balls[number] = true;
                     }
-                    Debug.Log("Ukrywam bilę");
                     gameObject.GetComponent<MeshRenderer>().enabled = false;
                 }
-                Debug.Log("Zeruje prędkość");
                 gameObject.GetComponent<BilliardBall>().speed = new Vector3(0, 0, 0);
             }
         }
@@ -355,8 +359,11 @@ public class BilliardBall : MonoBehaviour
     {
         float distanceBetweenObjects = Mathf.Sqrt(Mathf.Pow(gameObject.transform.position.x - collidingObject.transform.position.x, 2) + Mathf.Pow(gameObject.transform.position.z - collidingObject.transform.position.z, 2));
         float radiusesSum = gameObject.GetComponent<BilliardBall>().radius + collidingObject.GetComponent<BilliardBall>().radius;
+        float collisionPower = (collidingObject.GetComponent<BilliardBall>().speed - speed).magnitude;
 
         BilliardBall collidingObjectComponent = collidingObject.GetComponent<BilliardBall>();
+        billiardBallAudioSource.volume = Mathf.Clamp01(collisionPower / 4f);
+        billiardBallAudioSource.Play();
 
         //when balls overlapping each other than push them aside
         if (distanceBetweenObjects < radiusesSum)
@@ -403,8 +410,8 @@ public class BilliardBall : MonoBehaviour
         if (speed != Vector3.zero)
         {
             Collide();
+            Roll(speed * Time.deltaTime);
         }
-        Roll(speed * Time.deltaTime);
     }
     
     void Start()

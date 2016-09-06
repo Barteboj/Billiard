@@ -2,8 +2,8 @@
 using UnityEngine.UI;
 using System.Collections;
 
-public class MessagesController : MonoBehaviour {
-
+public class MessagesController : MonoBehaviour
+{
     public Text messagesText;
 
     private string[] messages;
@@ -37,14 +37,4 @@ public class MessagesController : MonoBehaviour {
         StopAllCoroutines();
         StartCoroutine(ShowMessagesRoutine());
     }
-
-    // Use this for initialization
-    void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
 }

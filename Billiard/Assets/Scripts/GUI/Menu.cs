@@ -2,19 +2,10 @@
 using System.Collections;
 using UnityEngine.SceneManagement;
 
-public class Menu : MonoBehaviour {
+public class Menu : MonoBehaviour
+{
     private int szerokoscPrzycisku = 250;
     private int wysokoscPrzycisku = 40;
-
-    // Use this for initialization
-    void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
 
     void OnGUI()
     {

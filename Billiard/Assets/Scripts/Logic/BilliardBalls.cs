@@ -17,6 +17,9 @@ public class BilliardBalls : MonoBehaviour
     public Sprite halfBallSprite;
     public Sprite fullOrHalfBallSprite;
 
+    private BilliardBall[] billiardBalls;
+    private MeshRenderer[] ballsMeshRenderers;
+
     public GameObject[] Balls
     {
         get
@@ -41,6 +44,16 @@ public class BilliardBalls : MonoBehaviour
         }
     }
 
+    void Awake()
+    {
+        billiardBalls = new BilliardBall[balls.Length];
+        ballsMeshRenderers = new MeshRenderer[balls.Length];
+        for (int i = 0; i < billiardBalls.Length; ++i)
+        {
+            billiardBalls[i] = balls[i].GetComponent<BilliardBall>();
+            ballsMeshRenderers[i] = balls[i].GetComponent<MeshRenderer>();
+        }
+    }
 
     public void HandleCollisions()
     {
@@ -51,14 +64,13 @@ public class BilliardBalls : MonoBehaviour
             numberOfCollisions = 0;
             for (int i = 0; i < balls.Length - 1; ++i)
             {
-                BilliardBall ballIBilliardBall = balls[i].GetComponent<BilliardBall>();
-                if (balls[i].GetComponent<MeshRenderer>().enabled)
+                if (ballsMeshRenderers[i].enabled)
                 {
                     for (int j = i + 1; j < balls.Length; ++j)
                     {
-                        if (balls[j].GetComponent<MeshRenderer>().enabled)
+                        if (ballsMeshRenderers[j].enabled)
                         {
-                            if (ballIBilliardBall.Collide(balls[j]))
+                            if (billiardBalls[i].Collide(balls[j]))
                             {
                                 numberOfCollisions++;
                             }
@@ -69,7 +81,6 @@ public class BilliardBalls : MonoBehaviour
         } while (numberOfCollisions > 0);
     }
 
-    //set balls in starting triangle position
     public void SetInTriangle(Vector3 positionOfFirstBall)
     {
         int actualBall = 0;
@@ -80,19 +91,15 @@ public class BilliardBalls : MonoBehaviour
             {
                 ++actualBall;
                 balls[actualBall].transform.position = new Vector3(balls[0].transform.position.x - ((balls[actualBall].GetComponent<BilliardBall>().Radius) * i) + j * (balls[actualBall].GetComponent<BilliardBall>().Radius * 2), balls[actualBall].transform.position.y, balls[0].transform.position.z + (i * (Mathf.Sqrt(3) / 2) * (balls[actualBall].GetComponent<BilliardBall>().Radius * 2)));
-                //balls[actualBall].transform.position = new Vector3(balls[actualBall - (j + 1)].transform.position.x - (balls[actualBall].GetComponent<BilliardBall>().radius * Mathf.Sqrt(2)) - ((i - (j + 1)) * (balls[actualBall].GetComponent<BilliardBall>().radius * Mathf.Sqrt(2))) + (j - (i - 1)) * (balls[actualBall].GetComponent<BilliardBall>().radius * Mathf.Sqrt(2)), balls[actualBall].transform.position.y, balls[0].transform.position.z + ((balls[0].GetComponent<BilliardBall>().radius * Mathf.Sqrt(2)) + (balls[0].GetComponent<BilliardBall>().radius * Mathf.Sqrt(2) * (i - 1))));
             }
         }
-
     }
 
-    // Use this for initialization
     void Start()
     {
         SetInTriangle(new Vector3(0, 0.917f, 0.25f));
     }
 
-    // Update is called once per frame
     void Update()
     {
         HandleCollisions();

@@ -2,19 +2,10 @@
 using System.Collections;
 using UnityEngine.SceneManagement;
 
-public class Koniec : MonoBehaviour {
+public class Koniec : MonoBehaviour
+{
     private int szerokoscPrzycisku = 250;
     private int wysokoscPrzycisku = 40;
-
-    // Use this for initialization
-    void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	    
-	}
 
     void OnGUI()
     {

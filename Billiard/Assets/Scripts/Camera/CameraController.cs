@@ -2,7 +2,11 @@
 using System.Collections;
 using UnityEngine.UI;
 
-public enum CameraState { TOPDOWN, FIRSTPERSON }
+public enum CameraState
+{
+    TOPDOWN,
+    FIRSTPERSON
+}
 
 public class CameraController : MonoBehaviour
 {
@@ -101,13 +105,11 @@ public class CameraController : MonoBehaviour
         gameObject.transform.Translate(-Input.GetAxis("Vertical") * Time.deltaTime, 0, Input.GetAxis("Horizontal") * Time.deltaTime, Space.World);
     }
 
-    // Use this for initialization
     void Start()
     {
         SetCameraState(CameraState.TOPDOWN);
     }
 
-    // Update is called once per frame
     void Update()
     {
         switch (cameraState)

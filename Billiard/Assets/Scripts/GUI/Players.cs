@@ -116,8 +116,6 @@ public class Players : MonoBehaviour
         stickUsed = false;
         whiteBilliardBall = false;
         playerPanels = GameObject.FindGameObjectsWithTag("Panel");
-        //playerPanels[0].GetComponent<Image>().color = Color.yellow;
-        //playerPanels[1].GetComponent<Image>().color = Color.white;
         playerOneGUIController.ViewPlayerActivity(true);
         playerParticleEffect[0].SetActive(true);
         text = player1PanelText.GetComponent<Text>();
@@ -134,7 +132,6 @@ public class Players : MonoBehaviour
 
     public void AddBilliardBall(int billiardBallNumber)
     {
-        Debug.Log(billiardBallNumber);
         if (wasFoul)
         {
             if (activePlayer == 0)
@@ -258,8 +255,6 @@ public class Players : MonoBehaviour
 
     public void ChangePlayer()
     {
-        //playerPanels[activePlayer].GetComponent<Image>().color = Color.white;
-        //playerParticleEffect[activePlayer].SetActive(false);
         if (activePlayer == 0)
         {
             playerOneGUIController.ViewPlayerActivity(false);
@@ -271,8 +266,6 @@ public class Players : MonoBehaviour
             playerTwoGUIController.ViewPlayerActivity(false);
         }
         activePlayer = (activePlayer == 0) ? 1 : 0;
-        //playerPanels[activePlayer].GetComponent<Image>().color = Color.yellow;
-        //playerParticleEffect[activePlayer].SetActive(true);
         wasFoul = false;
     }
 

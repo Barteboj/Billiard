@@ -5,20 +5,13 @@ using UnityEngine.SceneManagement;
 public class Nicknames : MonoBehaviour {
     private int szerokoscPrzycisku = 250;
     private int wysokoscPrzycisku = 40;
-    public static string player1Name;
-    public static string player2Name;
+    public static string player1Name = "";
+    public static string player2Name = "";
 
-
-    // Use this for initialization
-    void Start () {
+    void Start ()
+    {
         player1Name = "";
         player2Name = "";
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
 	}
 
     void OnGUI()
