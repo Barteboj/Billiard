@@ -26,11 +26,21 @@ public class Players : MonoBehaviour
     private Text text;
     private bool endMove;
     private bool wasFoul;
+    public bool wasWhiteBallPocketedInActualTurn = false;
+    public bool isCheckingIfWhiteBallWillBePocketedWithEightBall = false;
     public Text player1ColorText;
     public Text player2ColorText;
     public GameObject[] playerParticleEffect;
     public PlayerGUIController playerOneGUIController;
     public PlayerGUIController playerTwoGUIController;
+
+    public int ActivePlayerIndex
+    {
+        get
+        {
+            return activePlayer;
+        }
+    }
 
     public bool StickUsed
     {
@@ -108,7 +118,7 @@ public class Players : MonoBehaviour
         player2Balls = new List<int>();
         ballsLeft = new int[2];
         ballsLeft[0] = 7;
-        ballsLeft[0] = 7;
+        ballsLeft[1] = 7;
         playerColor = new int[2];
         playerColor[0] = 0;
         playerColor[1] = 0;
@@ -132,34 +142,36 @@ public class Players : MonoBehaviour
 
     public void AddBilliardBall(int billiardBallNumber)
     {
-        if (wasFoul)
+        if (billiardBallNumber < 8)
         {
-            if (activePlayer == 0)
-            {
-                player2Balls.Add(billiardBallNumber);
-                playerTwoGUIController.ViewPocketedBall(billiardBallNumber);
-            }
-            else
+            if (playerColor[0] == 1)
             {
                 player1Balls.Add(billiardBallNumber);
                 playerOneGUIController.ViewPocketedBall(billiardBallNumber);
+                --ballsLeft[0];
+            }
+            else
+            {
+                player2Balls.Add(billiardBallNumber);
+                playerTwoGUIController.ViewPocketedBall(billiardBallNumber);
+                --ballsLeft[1];
             }
         }
         else
         {
-            if (activePlayer == 0)
+            if (playerColor[0] == 2)
             {
                 player1Balls.Add(billiardBallNumber);
                 playerOneGUIController.ViewPocketedBall(billiardBallNumber);
+                --ballsLeft[0];
             }
-                
             else
             {
                 player2Balls.Add(billiardBallNumber);
                 playerTwoGUIController.ViewPocketedBall(billiardBallNumber);
+                --ballsLeft[1];
             }
         }
-        ballsLeft[activePlayer]--;
         ShowBalls();
     }
 
@@ -267,6 +279,7 @@ public class Players : MonoBehaviour
         }
         activePlayer = (activePlayer == 0) ? 1 : 0;
         wasFoul = false;
+        wasWhiteBallPocketedInActualTurn = false;
     }
 
     public void SetWhiteBilliardBall(GameObject billardBall)

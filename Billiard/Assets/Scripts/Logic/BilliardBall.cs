@@ -277,6 +277,7 @@ public class BilliardBall : MonoBehaviour
                 billiardBallPocketedAudioSource.Play();
                 if (this.number == 0)
                 {
+                    players.wasWhiteBallPocketedInActualTurn = true;
                     FindObjectOfType<MessagesController>().ShowMessage(players.GetActivePlayerName() + " pocketed white ball");
                     FindObjectOfType<Players>().WasFoul = true;
                     players.StickUsed = false;
@@ -287,33 +288,27 @@ public class BilliardBall : MonoBehaviour
                 {
                     if (players.IsAllBilliardBallsPocketed())
                     {
-                        SceneManager.LoadScene("Koniec");
+                        players.isCheckingIfWhiteBallWillBePocketedWithEightBall = true;
                     }
                     else
                     {
-                        SceneManager.LoadScene("Koniec");
+                        FindObjectOfType<EndGameGUIController>().ShowEndGameGUI(players.ActivePlayerIndex == 0 ? 1 : 0);
                     }
+                    pocketed = true;
+                    gameObject.GetComponent<MeshRenderer>().enabled = false;
+                    billiardBallPocketedAudioSource.Play();
                 }
                 else
                 {
-                    if (players.CheckBilliardBallsColor(this.number))
+                    if (!players.CheckBilliardBallsColor(this.number))
                     {
-                        FindObjectOfType<MessagesController>().ShowMessage(players.GetActivePlayerName() + " pocketed ball number " + number);
-                        players.AddBilliardBall(this.number);
-                        pocketed = true;
-                        players.StickUsed = false;
-                        players.balls[number] = true;
-                    }
-                    else
-                    {
-                        FindObjectOfType<MessagesController>().ShowMessage(players.GetActivePlayerName() + " pocketed ball number " + number);
-                        players.WrongBillardBall();
-                        pocketed = true;
                         FindObjectOfType<Players>().WasFoul = true;
-                        players.AddBilliardBall(this.number);
-                        players.StickUsed = false;
-                        players.balls[number] = true;
                     }
+                    FindObjectOfType<MessagesController>().ShowMessage(players.GetActivePlayerName() + " pocketed ball number " + number);
+                    players.AddBilliardBall(this.number);
+                    pocketed = true;
+                    players.StickUsed = false;
+                    players.balls[number] = true;
                     gameObject.GetComponent<MeshRenderer>().enabled = false;
                 }
                 gameObject.GetComponent<BilliardBall>().speed = new Vector3(0, 0, 0);

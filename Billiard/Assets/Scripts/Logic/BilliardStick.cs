@@ -147,6 +147,10 @@ public class BilliardStick : MonoBehaviour {
                 }
                 if (numberOfMovingBalls == 0)
                 {
+                    if (players.isCheckingIfWhiteBallWillBePocketedWithEightBall)
+                    {
+                        FindObjectOfType<EndGameGUIController>().ShowEndGameGUI(players.wasWhiteBallPocketedInActualTurn ? (players.ActivePlayerIndex == 0 ? 1 : 0) : players.ActivePlayerIndex);
+                    }
                     shotStage = ShotStage.PREPARINGSHOT;
                     if (players.WasFoul)
                     {
