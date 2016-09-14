@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class BilliardBalls : MonoBehaviour
 {
@@ -81,16 +82,34 @@ public class BilliardBalls : MonoBehaviour
         } while (numberOfCollisions > 0);
     }
 
+    //in 8-pool balls in bottom corners of triangle must be of different type, ball in center is ball 8, rest of balls are random
     public void SetInTriangle(Vector3 positionOfFirstBall)
     {
-        int actualBall = 0;
-        balls[0].transform.position = positionOfFirstBall;
+        List<GameObject> ballsLeftToSet = new List<GameObject>(balls);
+        ballsLeftToSet.RemoveAt(15);
+        int randomLeftCornerBallIndex = Random.Range(0, 2) == 0 ? Random.Range(0, 7) : Random.Range(8, 15);
+        int randomRightCornerBallIndex = randomLeftCornerBallIndex > 6 ? Random.Range(0, 7) : Random.Range(8, 15);
+        ballsLeftToSet[randomLeftCornerBallIndex].transform.position = new Vector3(positionOfFirstBall.x - ((balls[0].GetComponent<BilliardBall>().Radius) * 4), balls[0].transform.position.y, positionOfFirstBall.z + (4 * (Mathf.Sqrt(3) / 2) * (balls[0].GetComponent<BilliardBall>().Radius * 2)));
+        ballsLeftToSet[randomRightCornerBallIndex].transform.position = new Vector3(positionOfFirstBall.x - ((balls[0].GetComponent<BilliardBall>().Radius) * 4) + 4 * (balls[0].GetComponent<BilliardBall>().Radius * 2), balls[0].transform.position.y, positionOfFirstBall.z + (4 * (Mathf.Sqrt(3) / 2) * (balls[0].GetComponent<BilliardBall>().Radius * 2)));
+        ballsLeftToSet[7].transform.position = new Vector3(positionOfFirstBall.x, positionOfFirstBall.y, positionOfFirstBall.z + 2 * (Mathf.Sqrt(3) / 2) * (balls[0].GetComponent<BilliardBall>().Radius * 2));
+        ballsLeftToSet.RemoveAt(randomLeftCornerBallIndex);
+        ballsLeftToSet.RemoveAt(randomLeftCornerBallIndex > 6 ? randomRightCornerBallIndex : randomRightCornerBallIndex - 1);
+        ballsLeftToSet.RemoveAt(6);
+
+        int actualBall = Random.Range(0, 12);
+        ballsLeftToSet[actualBall].transform.position = positionOfFirstBall;
+        ballsLeftToSet.RemoveAt(actualBall);
         for (int i = 1; i <= 4; ++i)
         {
             for (int j = 0; j <= i; ++j)
             {
-                ++actualBall;
-                balls[actualBall].transform.position = new Vector3(balls[0].transform.position.x - ((balls[actualBall].GetComponent<BilliardBall>().Radius) * i) + j * (balls[actualBall].GetComponent<BilliardBall>().Radius * 2), balls[actualBall].transform.position.y, balls[0].transform.position.z + (i * (Mathf.Sqrt(3) / 2) * (balls[actualBall].GetComponent<BilliardBall>().Radius * 2)));
+                if ((i == 2 && j == 1) || (i == 4 && (j == 0 || j == 4)))
+                {
+                    continue;
+                }
+                actualBall = Random.Range(0, ballsLeftToSet.Count);
+                ballsLeftToSet[actualBall].transform.position = new Vector3(positionOfFirstBall.x - ((balls[actualBall].GetComponent<BilliardBall>().Radius) * i) + j * (balls[actualBall].GetComponent<BilliardBall>().Radius * 2), balls[actualBall].transform.position.y, positionOfFirstBall.z + (i * (Mathf.Sqrt(3) / 2) * (balls[actualBall].GetComponent<BilliardBall>().Radius * 2)));
+                ballsLeftToSet.RemoveAt(actualBall);
             }
         }
     }
