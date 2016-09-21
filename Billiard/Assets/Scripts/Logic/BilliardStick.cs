@@ -12,6 +12,8 @@ public enum ShotStage
 
 public class BilliardStick : MonoBehaviour {
 
+    private Vector3 viewfinderDefaultPosition;
+
     private float length;
 
     private float shotPower;
@@ -20,13 +22,18 @@ public class BilliardStick : MonoBehaviour {
 
     private bool isViewfinderEnabled = true;
 
+    public float rotationSpeed;
+
     public Players players;
 
     public GameObject viewfinder;
     public AudioSource stickHitBallAudioSource;
+    public CameraController cameraController;
 
     public void PrepareShot(GameObject billiardBall)
     {
+        viewfinder.transform.parent = gameObject.transform;
+        viewfinder.transform.localPosition = viewfinderDefaultPosition;
         gameObject.GetComponent<MeshRenderer>().enabled = true;
         gameObject.transform.rotation = new Quaternion(0, 0, 0, 0);
         gameObject.transform.position = new Vector3(billiardBall.transform.position.x, billiardBall.transform.position.y, billiardBall.transform.position.z - length - 0.06f);
@@ -41,7 +48,15 @@ public class BilliardStick : MonoBehaviour {
         Vector3 posToLookAt = Camera.main.ScreenToWorldPoint(mousePos);
         posToLookAt.y = gameObject.transform.position.y;
         gameObject.transform.position = billiardBall.transform.position;
-        gameObject.transform.LookAt(posToLookAt);
+        if (cameraController.cameraState == CameraState.TOPDOWN)
+        {
+            gameObject.transform.LookAt(posToLookAt);
+        }
+        else
+        {
+            gameObject.transform.position = billiardBall.transform.position;
+            gameObject.transform.Rotate(Vector3.up, Input.GetAxis("Mouse X") * rotationSpeed * Time.deltaTime, Space.World);
+        }
         gameObject.transform.Translate(0, 0, -(length + billiardBall.GetComponent<BilliardBall>().Radius + 0.05f));
         if (isViewfinderEnabled)
         {
@@ -49,6 +64,7 @@ public class BilliardStick : MonoBehaviour {
         }
         if (Input.GetMouseButtonDown(0))
         {
+            viewfinder.transform.parent = gameObject.transform.parent;
             shotStage = ShotStage.POWERADJUSTING;
         }
     }
@@ -111,6 +127,7 @@ public class BilliardStick : MonoBehaviour {
     
 	void Start ()
     {
+        viewfinderDefaultPosition = viewfinder.transform.localPosition;
         gameObject.GetComponent<MeshRenderer>().enabled = false;
         shotPower = 0.01f;
         shotStage = ShotStage.NOSHOT;
